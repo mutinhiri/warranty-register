@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: warranty_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - webnet
+
+  web:
+    build: .
+    environment:
+      DATABASE_URL: postgresql://postgres:subaru@localhost:5432/warranty_db
+      API_SECRET: bbcd5eec0f2c189fcdc28cb2dd9aab8ce7560153a226ac9bd724e9db88acf615
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    networks:
+      - webnet
+
+networks:
+  webnet:
+
+volumes:
+  pgdata:
