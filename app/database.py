@@ -9,7 +9,8 @@ DATABASE_URL = os.getenv(
     # "postgresql://postgres:subaru@localhost:5432/warranty_db"
     # "postgresql://eportuser:eportpassword@localhost:5432/warranty_db"
    # instead of localhost
-"postgresql://eportuser:eportpassword@warranty-register-db-1:5432/postgres"
+   "postgresql://eportuser:eportpassword@warranty-register-db-1:5432/warranty"
+
 
 
 
