@@ -1,10 +1,10 @@
 from fastapi import FastAPI
-from app.routes import router
+from . import models, database, routes
 
-app = FastAPI()
+app = FastAPI(title="Warranty Register API")
 
-app.include_router(router)
+# Create tables
+models.Base.metadata.create_all(bind=database.engine)
 
-@app.get("/")
-def root():
-    return {"message": "FastAPI is running!"}
+# Include routes
+app.include_router(routes.router)
