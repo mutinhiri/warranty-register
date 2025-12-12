@@ -1,31 +1,28 @@
-version: "3.8"
+version: "3.9"
 
 services:
   db:
     image: postgres:15
+    container_name: warranty-register-db-1
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: warranty_db
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
-    networks:
-      - webnet
+    ports:
+      - "5432:5432"
 
   web:
     build: .
+    container_name: warranty-register-web-1
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     environment:
-      DATABASE_URL: postgresql://postgres:subaru@localhost:5432/warranty_db
-      API_SECRET: bbcd5eec0f2c189fcdc28cb2dd9aab8ce7560153a226ac9bd724e9db88acf615
-    depends_on:
-      - db
+      DATABASE_URL: postgresql://eportuser:eportpassword@warranty-register-db-1:5432/postgres
     ports:
       - "8000:8000"
-    networks:
-      - webnet
-
-networks:
-  webnet:
+    depends_on:
+      - db
 
 volumes:
   pgdata:
