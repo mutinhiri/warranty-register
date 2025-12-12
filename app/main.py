@@ -6,15 +6,15 @@ from . import models, database, routes
 app = FastAPI(title="Warranty Register API")
 
 
-origins = [
-    "https://asset-management-git-dev-mutinhiris-projects.vercel.app",
-    "https://server4.eport.ws",
-]
+# origins = [
+#     "https://asset-management-git-dev-mutinhiris-projects.vercel.app",
+#     "https://server4.eport.ws",
+# ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # cannot use "*" with credentials
-    allow_credentials=True,
+    allow_origins=["*"],  # cannot use "*" with credentials
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
