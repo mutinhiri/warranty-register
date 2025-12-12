@@ -8,7 +8,7 @@ app = FastAPI(title="Warranty Register API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://asset-management-prixxb6d4-mutinhiris-projects.vercel.app"],  # or ["https://server4.eport.ws"] in production
+    allow_origins=["*"],  # or ["https://server4.eport.ws"] in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
