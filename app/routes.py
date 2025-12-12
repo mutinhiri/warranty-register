@@ -20,6 +20,10 @@ def verify_token(authorization: str = Header(None)):
     token = authorization.split()[1]
     if token != API_SECRET:
         raise HTTPException(status_code=401, detail="Invalid token")
+    
+@router.get('/')
+def root():
+     return {"message": "Warranty Register API"}
 
 @router.post("/api/register", response_model=schemas.WarrantyOut)
 def register_warranty(warranty: schemas.WarrantyCreate, db: Session = Depends(get_db), authorization: str = Header(None)):
@@ -39,3 +43,11 @@ def list_warranties(db: Session = Depends(get_db), authorization: str = Header(N
     verify_token(authorization)
     warranties = db.query(models.Warranty).all()
     return warranties
+
+@router.get("/api/warranty/{asset_id}", response_model=schemas.WarrantyOut)
+def get_warranty(asset_id: str, db: Session = Depends(get_db), authorization: str = Header(None)):
+    verify_token(authorization)
+    warranty = db.query(models.Warranty).filter(models.Warranty.asset_id == asset_id).first()
+    if not warranty:
+        raise HTTPException(status_code=404, detail="Warranty not found")
+    return warranty
