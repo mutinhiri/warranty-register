@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from . import models, schemas, database
+from typing import List
 import os
 
 API_SECRET = os.getenv("API_SECRET", "bbcd5eec0f2c189fcdc28cb2dd9aab8ce7560153a226ac9bd724e9db88acf615")
@@ -31,3 +32,10 @@ def register_warranty(warranty: schemas.WarrantyCreate, db: Session = Depends(ge
     db.commit()
     db.refresh(new_warranty)
     return new_warranty
+
+
+@router.get("/api/warranties", response_model=List[schemas.WarrantyOut])
+def list_warranties(db: Session = Depends(get_db), authorization: str = Header(None)):
+    verify_token(authorization)
+    warranties = db.query(models.Warranty).all()
+    return warranties
