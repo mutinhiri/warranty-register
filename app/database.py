@@ -6,7 +6,9 @@ import os
 # DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@db:5432/warranty_db")
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://postgres:subaru@localhost:5432/warranty_db"
+    # "postgresql://postgres:subaru@localhost:5432/warranty_db"
+    "postgresql://eportuser:eportpassword@localhost:5432/warranty_db"
+
 )
 
 engine = create_engine(DATABASE_URL)
