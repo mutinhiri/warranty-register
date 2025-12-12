@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from . import models, schemas, database
+from typing import List
 import os
 
 API_SECRET = os.getenv("API_SECRET", "bbcd5eec0f2c189fcdc28cb2dd9aab8ce7560153a226ac9bd724e9db88acf615")
@@ -19,6 +20,10 @@ def verify_token(authorization: str = Header(None)):
     token = authorization.split()[1]
     if token != API_SECRET:
         raise HTTPException(status_code=401, detail="Invalid token")
+    
+@router.get('/')
+def root():
+     return {"message": "Warranty Register API"}
 
 @router.post("/api/register", response_model=schemas.WarrantyOut)
 def register_warranty(warranty: schemas.WarrantyCreate, db: Session = Depends(get_db), authorization: str = Header(None)):
@@ -31,3 +36,18 @@ def register_warranty(warranty: schemas.WarrantyCreate, db: Session = Depends(ge
     db.commit()
     db.refresh(new_warranty)
     return new_warranty
+
+
+@router.get("/api/warranties", response_model=List[schemas.WarrantyOut])
+def list_warranties(db: Session = Depends(get_db), authorization: str = Header(None)):
+    verify_token(authorization)
+    warranties = db.query(models.Warranty).all()
+    return warranties
+
+@router.get("/api/warranty/{asset_id}", response_model=schemas.WarrantyOut)
+def get_warranty(asset_id: str, db: Session = Depends(get_db), authorization: str = Header(None)):
+    verify_token(authorization)
+    warranty = db.query(models.Warranty).filter(models.Warranty.asset_id == asset_id).first()
+    if not warranty:
+        raise HTTPException(status_code=404, detail="Warranty not found")
+    return warranty
